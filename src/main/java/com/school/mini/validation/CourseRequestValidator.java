@@ -36,8 +36,8 @@ public class CourseRequestValidator {
             throw new BusinessException("Course capacity must be greater than zero");
         }
 
-        if (Objects.isNull(courseDto.getPrerequisites())) {
-            throw new BusinessException("Prerequisite list must not be null (can be empty)");
-        }
+//        if (Objects.isNull(courseDto.getPrerequisites())) {
+//            throw new BusinessException("Prerequisite list must not be null (can be empty)");
+//        }
     }
 }

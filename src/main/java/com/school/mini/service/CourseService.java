@@ -22,6 +22,9 @@ public class CourseService {
     private final CourseRepository courseRepository;
 
     public CourseDto create(CourseDto dto) {
+        if (dto == null) {
+            throw new BusinessException("Course data must not be null");
+        }
         Course course = Course.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
@@ -32,11 +35,17 @@ public class CourseService {
         if (dto.getPrerequisites() != null && !dto.getPrerequisites().isEmpty()) {
             List<Course> prerequisites = courseRepository.findAllById(dto.getPrerequisites());
 
+            if (prerequisites.size() != dto.getPrerequisites().size()) {
+                throw new BusinessException("Some prerequisite course IDs are invalid");
+            }
+
             if (prerequisites.contains(course)) {
                 throw new BusinessException("A course cannot be its own prerequisite");
             }
 
             course.setPrerequisites(new HashSet<>(prerequisites));
+        } else {
+            course.setPrerequisites(new HashSet<>());
         }
 
         Course saved = courseRepository.save(course);
@@ -71,6 +80,9 @@ public class CourseService {
                 throw new BusinessException("A course cannot be its own prerequisite");
             }
             course.setPrerequisites(new HashSet<>(prerequisites));
+        }
+        else {
+            course.setPrerequisites(new HashSet<>());
         }
 
         return toDto(courseRepository.save(course));
